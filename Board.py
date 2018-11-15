@@ -30,13 +30,20 @@ class Board:
 
     def printBoard(self):
         for i in range(self.size):
-            print(self.board[i])
+            print (i%10),
+        print(" ")
+        for i in range(self.size):
+            for j in range(self.size):
+                print(self.board[i][j]),
+            print (i),
+            print (" ")
 
     def updateBoard(self,(x,y)):
         if(self._isBlack):
             self.c = 'x'
         else:
             self.c = 'o'
+
         if self._isBlack:
             if self._isValidMove((x,y)):
                 self.black.append([x,y])
@@ -52,6 +59,7 @@ class Board:
                 print("Error input, please enter a valid coordinate")
 
         self.printBoard()
+
         if self.checkWin(x,y):
             if self._isBlack: 
                 print("Black") 
@@ -74,17 +82,16 @@ class Board:
         tempy = y
         for i in range(4):
             tempy += 1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
+
         tempy = y
         for i in range(4):
             tempy-=1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1                  
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1                  
             else:
                 break
 
@@ -99,17 +106,15 @@ class Board:
         tempy = y
         for i in range(4):
             tempx += 1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
         tempx = x
         for i in range(4):
             tempx-=1            
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
 
@@ -125,9 +130,8 @@ class Board:
         for i in range(4):
             tempx += 1
             tempy += 1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
         tempx = x
@@ -135,9 +139,8 @@ class Board:
         for i in range(4):
             tempx-=1
             tempy-=1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
 
@@ -153,9 +156,8 @@ class Board:
         for i in range(4):
             tempx += 1
             tempy -= 1
-            if (self._inBoard((tempx,tempy))):
-                if(self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
         tempx = x
@@ -163,9 +165,8 @@ class Board:
         for i in range(4):
             tempx-=1
             tempy+=1
-            if (self._inBoard((tempx,tempy))):
-                if (self.board[tempx][tempy] == self.c):
-                    temp_count +=1
+            if (self._inBoard((tempx,tempy)) and self.board[tempx][tempy] == self.c):
+                temp_count +=1
             else:
                 break
 

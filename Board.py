@@ -3,7 +3,7 @@ class Board:
 
     def __init__(self):
 
-        self.size = 15
+        self.size = 8
         self.white = []
         self.black = []
         self.win = False

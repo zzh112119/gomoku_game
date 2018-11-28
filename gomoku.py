@@ -1,3 +1,90 @@
+import Board as b
+import ast
+import Eval_funcs as ef
+import Queue as q
+
+class Gomoku:
+
+    def __init__(self):
+        self.white_list = []
+        self.black_list = []
+
+    def trans(self,(y,x)):
+        return [x,y]
+
+    def readFile(self):
+        f = open("game.txt","r")
+
+
+    def enterPosition(self,board):
+        while True:
+            while True:
+                try:    
+                    move = ast.literal_eval(raw_input("Please enter your move in format '(x,y)': "))
+                    break
+                except(ValueError,SyntaxError,TypeError):
+                    print("error")
+                    continue
+            piece = self.trans(move)
+            if(board._isValidMove((piece[0],piece[1]))):
+                print(piece[0])
+                break
+            else:
+                print("enter valid position")
+                continue
+        print("Black moved {0}".format(move))
+        return piece
+
+
+    def gomoku(self):
+        board = b.Board()
+
+        board.printBoard()
+
+        tlimit = 2;
+        print("player 1 moves first")
+        piece = self.enterPosition(board)
+        # board._isBlack = True
+        board.updateBoard((piece[0],piece[1]))
+        self.black_list.append([piece[0],piece[1]])
+
+        print("GomoBot moves")
+        # board._isBlack = False
+        move = ef.secondmove(board, piece[0], piece[1])
+        piece = self.trans(move)
+        board.updateBoard((piece[0],piece[1]))
+        self.white_list.append([piece[0],piece[1]])
+
+        while not board.win:
+
+            print("player 1 moves")
+            piece = self.enterPosition(board)
+            # board._isBlack = True
+            board.updateBoard((piece[0],piece[1]))
+            self.black_list.append([piece[0],piece[1]])
+
+            if(board.win):
+                break
+
+            print("GomoBot moves")
+            move = ef.nextMove(board,tlimit,3)
+            board.updateBoard(move)
+            self.white_list.append([move[0],move[1]])
+            print("Black:", self.black_list)
+            print("White:", self.white_list)
+
+        print("game_over")
+
+if __name__=="__main__":
+    G = Gomoku()
+    G.gomoku()
+
+
+
+
+
+
+
 # class piece:
 #     def __init__(self,isBlack):
 #         if isBlack:
@@ -82,69 +169,3 @@
 # if __name__=="__main__":
 #     gomoku()
 
-
-import Board as b
-import ast
-import Eval_funcs as ef
-import Queue as q
-
-def trans((y,x)):
-    arr = [x,y]
-    return arr
-
-def enterPosition(board):
-    while True:
-        while True:
-            try:    
-                move = ast.literal_eval(raw_input("Please enter your move in format '(x,y)': "))
-                break
-            except(ValueError,SyntaxError,TypeError):
-                print("error")
-                continue
-        piece = trans(move)
-        if(board._isValidMove((piece[0],piece[1]))):
-            print(piece[0])
-            break
-        else:
-            print("enter valid position")
-            continue
-    print("Black moved {0}".format(move))
-    return piece
-
-
-
-
-def gomoku():
-    board = b.Board()
-
-    board.printBoard()
-
-    tlimit = 2;
-    print("player 1 moves first")
-    piece = enterPosition(board)
-    # board._isBlack = True
-    board.updateBoard((piece[0],piece[1]))
-
-    print("player 2 moves")
-    # board._isBlack = False
-    move = ef.secondmove(board, piece[0], piece[1])
-    piece = trans(move)
-    board.updateBoard((piece[0],piece[1]))
-
-    while not board.win:
-
-        print("player 1 moves")
-        piece = enterPosition(board)
-        # board._isBlack = True
-        board.updateBoard((piece[0],piece[1]))
-        if(board.win):
-            break
-
-        print("player 2 moves")
-        move = ef.nextMove(board,tlimit,3)
-        board.updateBoard(move)
-        # piece = enterPosition(board)
-        # board._isBlack = False
-        # board.updateBoard(piece[0],piece[1])
-
-    print("game_over")

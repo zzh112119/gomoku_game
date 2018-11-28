@@ -2,19 +2,57 @@ import Board as b
 import ast
 import Eval_funcs as ef
 import Queue as q
+import time
 
 class Gomoku:
 
     def __init__(self):
         self.white_list = []
         self.black_list = []
+        self.cam_list = []
+        self.playerInput = []
 
     def trans(self,(y,x)):
         return [x,y]
 
     def readFile(self):
+        self.cam_list=[]
         f = open("game.txt","r")
+        contents = f.readlines()
+        for content in contents:
+            coordinates = content.rstrip().split(',')
+            self.cam_list.append([int(coordinates[0]),int(coordinates[1])])
+        f.close()
+        print(self.cam_list)
 
+    def checkNewMove(self):
+        checker = 0
+
+        for elem in self.cam_list:
+            if (elem not in self.white_list and elem not in self.black_list):
+                checker+=1
+                self.playerInput = elem
+
+        if checker>1:
+            print("More than one plays detected!!!")
+            return False
+
+        elif checker==1:
+            print("Player moves at:", self.playerInput)
+            return True
+
+        else:
+            print("No new plays detected")
+            return False
+
+    def playerNewMove(self):
+        self.readFile()
+
+        while not self.checkNewMove():
+            self.readFile()
+            time.sleep(0.5)
+
+        return self.playerInput
 
     def enterPosition(self,board):
         while True:
@@ -57,8 +95,10 @@ class Gomoku:
 
         while not board.win:
 
-            print("player 1 moves")
-            piece = self.enterPosition(board)
+            print("Player moves")
+            raw_input('Press enter to continue: ')
+            # piece = self.enterPosition(board)
+            piece = self.playerNewMove()
             # board._isBlack = True
             board.updateBoard((piece[0],piece[1]))
             self.black_list.append([piece[0],piece[1]])
@@ -73,10 +113,11 @@ class Gomoku:
             print("Black:", self.black_list)
             print("White:", self.white_list)
 
-        print("game_over")
+        print("GAME OVER")
 
 if __name__=="__main__":
     G = Gomoku()
+    # G.readFile()
     G.gomoku()
 
 

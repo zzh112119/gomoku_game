@@ -96,6 +96,7 @@ def _eval_func(board,position, attack):
             for i in range(paths_num):
                 consec = pathlist[i:i+5].count(color.symbol)
                 total_consec += consec**5 if consec!=5-1 else 100**(9 if attack else 8) 
+    
     return total_consec
 
 def evaluate_position(board,position):

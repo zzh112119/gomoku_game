@@ -4,7 +4,35 @@ import Eval_funcs as ef
 import Queue as q
 import time
 
+def y_axis(y):
+    return y - 1
+
+def x_axis(x):
+    return 9 - x
+
+def arm_coordinate(x,y):
+    f = open("arm.txt", "w")
+    print("file open")
+    while True :
+        try:
+            # str1 = str(x) + ',' + str(y)
+            print(x)
+            print(y)
+            str1 = str(y-1) + ',' + str(9-x)
+            print("write: "+str1+"\n")
+            f.write(str1)
+            f.write('\n')
+            f.flush() 
+            break
+        except:
+            pass
+    f.close()
+
+
 class Gomoku:
+
+
+
 
     def __init__(self):
         self.white_list = []
@@ -12,12 +40,12 @@ class Gomoku:
         self.cam_list = []
         self.playerInput = []
 
-    def trans(self,(y,x)):
+    def trans(self,(x,y)):
         return [x,y]
 
     def readFile(self):
         self.cam_list=[]
-        f = open("game.txt","r")
+        f = open("data.txt","r")
         contents = f.readlines()
         for content in contents:
             coordinates = content.rstrip().split(',')
@@ -45,14 +73,17 @@ class Gomoku:
             print("No new plays detected")
             return False
 
-    def playerNewMove(self):
+    def playerNewMove(self,board):
         self.readFile()
-
         while not self.checkNewMove():
-            self.readFile()
-            time.sleep(0.5)
-
+        	try:
+	            self.readFile()
+	            time.sleep(0.5)
+	    	except KeyboardInterrupt:
+	    		self.playerInput = self.enterPosition(board)
+	    		self.cam_list.append([int(self.playerInput[0]),int(self.playerInput[1])])
         return self.playerInput
+
 
     def enterPosition(self,board):
         while True:
@@ -81,26 +112,28 @@ class Gomoku:
 
         tlimit = 2;
         print("player 1 moves first")
-        piece = self.enterPosition(board)
+        piece = self.playerNewMove(board)
         # board._isBlack = True
-        board.updateBoard((piece[0],piece[1]))
-        self.black_list.append([piece[0],piece[1]])
+        board.updateBoard((y_axis(piece[0]),x_axis(piece[1])))
+        self.black_list.append([piece[0], piece[1]])
 
         print("GomoBot moves")
         # board._isBlack = False
         move = ef.secondmove(board, piece[0], piece[1])
         piece = self.trans(move)
-        board.updateBoard((piece[0],piece[1]))
+        board.updateBoard((y_axis(piece[0]),x_axis(piece[1])))
+        arm_coordinate(piece[0], piece[1])
         self.white_list.append([piece[0],piece[1]])
 
         while not board.win:
 
             print("Player moves")
-            raw_input('Press enter to continue: ')
+            # raw_input('Press enter to continue: ')
             # piece = self.enterPosition(board)
-            piece = self.playerNewMove()
+            raw_input("Please enter to continue")
+            piece = self.playerNewMove(board)
             # board._isBlack = True
-            board.updateBoard((piece[0],piece[1]))
+            board.updateBoard((y_axis(piece[0]),x_axis(piece[1])))
             self.black_list.append([piece[0],piece[1]])
 
             if(board.win):
@@ -109,7 +142,8 @@ class Gomoku:
             print("GomoBot moves")
             move = ef.nextMove(board,tlimit,3)
             board.updateBoard(move)
-            self.white_list.append([move[0],move[1]])
+            self.white_list.append([move[0]+1,10 - move[1] - 1])
+            arm_coordinate(move[0]+1, 10 - move[1] - 1)
             print("Black:", self.black_list)
             print("White:", self.white_list)
 
@@ -121,92 +155,4 @@ if __name__=="__main__":
     G.gomoku()
 
 
-
-
-
-
-
-# class piece:
-#     def __init__(self,isBlack):
-#         if isBlack:
-#             self.isBlack = True
-#             self.color = "BLACK"
-#             self.symbol = "x"
-#         else:
-#             self.isBlack = False
-#             self.color = "WHITE"
-#             self.symbol = "o"
-
-#     def trans(self,(y,x)):
-#         arr = [x,y]
-#         return arr
-
-
-# import ast
-
-# def gomoku():
-#     board_size = 8
-#     connect_size = 5
-
-#     print(board_size)
-#     h = 8
-#     w = 8
-#     p = piece(True)
-
-#     game_over = False;
-
-#     board = [['.' for x in range(w)] for y in range(h)]
-#     print("player 1 moves first")
-#     for i in range(8):
-#         print(board[i])
-#     while True:
-#         try:    
-#             move = ast.literal_eval(raw_input("Please enter your move in format '(y,x)': "))
-#             break
-#         except(ValueError,SyntaxError,TypeError):
-#             continue
-#     # move = board(move)
-#     print("Black moved {0}".format(move))
-#     update = p.trans(move)
-#     board[update[0]][update[1]] = 'x'
-
-
-#     while not game_over:
-#         print("player 2 moves") 
-#         for i in range(8):
-#             print(board[i])
-#         while True:
-#             try:    
-#                 move = ast.literal_eval(raw_input("Please enter your move in format '(y,x)': "))
-#                 break
-#             except(ValueError,SyntaxError,TypeError):
-#                 continue
-#         # move = board(move)
-#         print("white moved {0}".format(move))
-#         update = p.trans(move)
-#         board[update[0]][update[1]] = 'o'   
-
-#         print("player 1 moves") 
-#         for i in range(8):
-#             print(board[i])
-#         while True:
-#             try:    
-#                 move = ast.literal_eval(raw_input("Please enter your move in format '(y,x)': "))
-#                 break
-#             except(ValueError,SyntaxError,TypeError):
-#                 continue
-
-#         # move = board(move)
-#         print("black moved {0}".format(move))
-#         update = p.trans(move)
-#         print(update[0])
-#         print(update[1])
-#         board[update[0]][update[1]] = 'x'
-
-#         game_over = True
-
-#     print("Game over")
-
-# if __name__=="__main__":
-#     gomoku()
 

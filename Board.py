@@ -3,7 +3,7 @@ class Board:
 
     def __init__(self):
 
-        self.size = 8
+        self.size = 9
         self.white = []
         self.black = []
         self.win = False
@@ -30,12 +30,12 @@ class Board:
 
     def printBoard(self):
         for i in range(self.size):
-            print (i%10),
+            print (10 - i%10 - 1),
         print(" ")
         for i in range(self.size):
             for j in range(self.size):
                 print(self.board[i][j]),
-            print (i),
+            print (i + 1),
             print (" ")
 
     def updateBoard(self,(x,y)):
